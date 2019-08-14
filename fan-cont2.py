@@ -1,3 +1,4 @@
+import os
 import RPi.GPIO as GPIO
 from time import sleep
 
@@ -15,19 +16,30 @@ GPIO.output(in1, GPIO.LOW)
 GPIO.output(in2,GPIO.LOW)
 p=GPIO.PWM(en,1000)
 
-p.start(20)
+p.start(15)
+temp=0
+temp1=0
+
+def measure_temp():
+        temp=os.popen("vcgencmd measure_temp").readline()
+        return (temp.replace("temp=","").replace("'C\n",""))
 
 while(1):
-	
-	x=raw_input()
-	
-	if x=='r':
-		print("run")
+       
+	temp1=measure_temp()
+	temp2=float(temp1)
+	print(temp2)
+        if 35>temp2>30:
+                print("run")
+                GPIO.output(in1,GPIO.HIGH)
+                GPIO.output(in2,GPIO.LOW)
+        elif 40>temp2>35:
 		GPIO.output(in1,GPIO.HIGH)
 		GPIO.output(in2,GPIO.LOW)
-	elif x=='l':
-		print("Low")
-		p.ChangeDutyCycle(50);
-	elif x=='e':
-		GPIO.cleanup()
-		print("GPIO Cleanup")
+                p.ChangeDutyCycle(50)
+        elif temp2>40:
+		GPIO.output(in1,GPIO.HIGH)
+		GPIO.output(in2,GPIO.LOW)
+                p.ChangeDutyCycle(80)
+	sleep(3)
+GPIO.cleanup()
