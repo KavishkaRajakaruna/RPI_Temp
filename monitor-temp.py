@@ -37,7 +37,7 @@ while True:
 	
 	temp1 =measure_temp()
 	temp2=float(temp1)
-	print(temp1)
+	#print(temp1)
 	
 	
 	if 35>temp2>30:
@@ -59,5 +59,5 @@ while True:
 	sql_temp = (temp1,speed,)
 	mycursor.execute(sql,sql_temp)
 	db.commit()
-	time.sleep(3)
+	time.sleep(5)
 GPIO.cleanup()
